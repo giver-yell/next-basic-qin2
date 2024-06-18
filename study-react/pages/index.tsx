@@ -10,6 +10,7 @@ export default function Home() {
   const [count, setCount] = useState(1);
   const [text, setText] = useState("");
   const [isShow, setIsShow] = useState(true);
+  const [array, setArray] = useState<string[]>([]);
 
   // const handleClick = () => {
   //   setCount(count => count + 1);
@@ -34,6 +35,11 @@ export default function Home() {
     setIsShow(isShow => !isShow);
   }, [])
 
+  const handleAdd = useCallback(() => {
+    setArray(array => [...array, text]);
+  }
+  , [text])
+
   // 第二引数が変更されるたびに実行される
   useEffect(() => {
     console.log("mounted")
@@ -56,11 +62,13 @@ export default function Home() {
       <button onClick={handleDisplay}>
         {isShow ? "非表示" : "表示"}
       </button>
-      <input
-        type="text"
-        value={text}
-        onChange={handleChange}
-      />
+      <input type="text" value={text} onChange={handleChange} />
+      <ul>
+        {array.map((value, index) => (
+          <li key={index}>{value}</li>
+        ))}
+      </ul>
+      <button onClick={handleAdd}>追加</button>
       <Main page="index" />
     </>
   );
