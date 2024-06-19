@@ -2,16 +2,31 @@ import { Inter } from "next/font/google";
 import { Main } from "@/components/Main";
 import Head from "next/head";
 import { Header } from "@/components/Header";
-import { useCounter } from "@/hooks/useCounter";
-import { useInputArray } from "@/hooks/useInputArray";
-import { useBgLightblue } from "@/hooks/useBgLightblue";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function About() {
-  const { count, isShow, handleClick, handleDisplay } = useCounter();
-  const { text, array, handleChange, handleAdd } = useInputArray();
-  useBgLightblue();
+interface HomeProps {
+  count: number;
+  isShow: boolean;
+  handleClick: () => void;
+  handleDisplay: () => void;
+  text: string;
+  array: string[];
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleAdd: () => void;
+}
+
+export default function About(props: HomeProps) {
+  const {
+    count,
+  isShow,
+  handleClick,
+  handleDisplay,
+  text,
+  array,
+  handleChange,
+  handleAdd,
+  } = props
 
   return (
     <>
