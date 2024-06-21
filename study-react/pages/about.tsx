@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 interface HomeProps {
   count: number;
+  doubleCount: number;
   isShow: boolean;
   handleClick: () => void;
   handleDisplay: () => void;
@@ -18,14 +19,14 @@ interface HomeProps {
 
 export default function About(props: HomeProps) {
   const {
-    count,
-  isShow,
-  handleClick,
-  handleDisplay,
-  text,
-  array,
-  handleChange,
-  handleAdd,
+    doubleCount,
+    isShow,
+    handleClick,
+    handleDisplay,
+    text,
+    array,
+    handleChange,
+    handleAdd,
   } = props
 
   return (
@@ -35,7 +36,7 @@ export default function About(props: HomeProps) {
       </Head>
       <Header />
 
-      {isShow ? <h1>{count}</h1> : null}
+      {isShow ? <h1>{doubleCount}</h1> : null}
       <button onClick={handleClick}>ボタン</button>
       <button onClick={handleDisplay}>
         {isShow ? "非表示" : "表示"}
