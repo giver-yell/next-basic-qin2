@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import { Main } from "@/components/Main";
 import { Header } from "@/components/Header";
-import { useCallback, useEffect, useState } from "react";
+import { Posts } from "@/components/Posts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,11 +17,6 @@ interface HomeProps {
   handleAdd: () => void;
 }
 
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-}
 
 export default function Home({
   count,
@@ -33,21 +28,6 @@ export default function Home({
   handleChange,
   handleAdd,
 }: HomeProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  const getPosts = useCallback(async () => {
-    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-    const posts = await res.json();
-    setPosts(posts);
-  }, []);
-
-  useEffect(() => {
-    getPosts();
-  }
-  , [getPosts]);
-
-  console.log(posts);
-
   return (
     <>
       <Head>
@@ -70,12 +50,7 @@ export default function Home({
       <button onClick={handleAdd}>追加</button>
       <Main page="index" />
 
-      {posts.map((post) => (
-        <div key={post.id}>
-          <h2>{post.title}</h2>
-          <p>{post.body}</p>
-        </div>
-      ))}
+      <Posts />
     </>
   );
 }
