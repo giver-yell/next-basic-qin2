@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import useSWR from "swr";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,7 +49,13 @@ export const Posts = () => {
   return (
     <ol>
       {data.map((post) => {
-        return <li key={post.id}>{post.title}</li>
+        return (
+          <li key={post.id}>
+            <Link href={`/post/${post.id}`}>
+              {post.title}
+            </Link>
+          </li>
+        )
       })}
     </ol>
   );
