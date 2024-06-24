@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,10 +10,48 @@ interface Post {
   body: string;
 }
 
+interface State {
+  data: Post[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: State = {
+  data: [],
+  loading: true,
+  error: null,
+};
+
+type Action =
+  | { type: "FETCHING" }
+  | { type: "FETCHED"; payload: Post[] }
+  | { type: "ERROR"; payload: string }
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "FETCHED":
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+      };
+    case "ERROR":
+      return {
+        ...state,
+        error: action.payload,
+      };
+    default:
+      throw new Error("An error occurred while fetching the data");
+  }
+}
+
 export const Posts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [state, setState] = useState<State>({
+  //   data: [],
+  //   loading: true,
+  //   error: null,
+  // });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const getPosts = useCallback(async () => {
     try {
@@ -21,17 +59,34 @@ export const Posts = () => {
       if (!res.ok) {
         throw new Error("An error occurred while fetching the data");
       }
-      const posts = await res.json();
-      setPosts(posts);
-      setLoading(false);
+      const json: Post[] = await res.json();
+      dispatch({ type: "FETCHED", payload: json });
+      // setState(prevState => {
+      //   return {
+      //     ...prevState,
+      //     data: json,
+      //     loading: false,
+      //   }
+      // });
     } catch (err) {
       if (err instanceof Error) {
-        setError(err.message);
+        dispatch({ type: "ERROR", payload: err.message });
+        // setState(prevState => {
+        //   return {
+        //     ...prevState,
+        //     error: err.message,
+        //   }
+        // });
       } else {
-        setError("An error occurred");
+        dispatch({ type: "ERROR", payload: "An error occurred while fetching the data" });
+        // setState(prevState => {
+        //   return {
+        //     ...prevState,
+        //     error: "An error occurred while fetching the data",
+        //   }
+        // });
       }
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -39,21 +94,23 @@ export const Posts = () => {
   }
   , [getPosts]);
 
-  if (loading) {
+  console.log("bar");
+
+  if (state.loading) {
     return <p>loading...</p>;
   }
 
-  if (error) {
-    return <p>{error}</p>;
+  if (state.error) {
+    return <p>{state.error}</p>;
   }
 
-  if (posts.length === 0) {
+  if (state.data.length === 0) {
     return <p>no posts found</p>;
   }
 
   return (
     <ol>
-      {posts.map((post) => {
+      {state.data.map((post) => {
         return <li key={post.id}>{post.title}</li>
       })}
     </ol>
