@@ -46,11 +46,6 @@ const reducer = (state: State, action: Action): State => {
 }
 
 export const Posts = () => {
-  // const [state, setState] = useState<State>({
-  //   data: [],
-  //   loading: true,
-  //   error: null,
-  // });
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const getPosts = useCallback(async () => {
@@ -61,30 +56,11 @@ export const Posts = () => {
       }
       const json: Post[] = await res.json();
       dispatch({ type: "FETCHED", payload: json });
-      // setState(prevState => {
-      //   return {
-      //     ...prevState,
-      //     data: json,
-      //     loading: false,
-      //   }
-      // });
     } catch (err) {
       if (err instanceof Error) {
         dispatch({ type: "ERROR", payload: err.message });
-        // setState(prevState => {
-        //   return {
-        //     ...prevState,
-        //     error: err.message,
-        //   }
-        // });
       } else {
         dispatch({ type: "ERROR", payload: "An error occurred while fetching the data" });
-        // setState(prevState => {
-        //   return {
-        //     ...prevState,
-        //     error: "An error occurred while fetching the data",
-        //   }
-        // });
       }
     }
   }, []);
