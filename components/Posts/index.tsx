@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import useSWR from "swr";
 import Link from "next/link";
+import { fetcher } from "@/utils/fetcher";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,14 +23,6 @@ const initialState: State = {
   loading: true,
   error: null,
 };
-
-const fetcher = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("An error occurred while fetching the data.");
-  }
-  return response.json();
-}
 
 export const Posts = () => {
   const { data, error, isLoading } = useSWR<Post[]>("https://jsonplaceholder.typicode.com/posts", fetcher);
